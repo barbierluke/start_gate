@@ -106,6 +106,7 @@ def bottomOut(array,row, startIndex, polePointsR2L, waterPointsR2L, delta=10):
     while not foundWater:
         # first see if we can go downward, if not head inward by three points
         if abs(array[row][col] - uWater) < delta: # we've got water
+            array[row][col] = 255; # set to white
             col += 1
             moved += 1
             print "moving over"
@@ -114,22 +115,26 @@ def bottomOut(array,row, startIndex, polePointsR2L, waterPointsR2L, delta=10):
                 break
         elif abs(array[row][col] - np.mean(polePoints)) < delta:
             polePoints.append(array[row][col])
+            array[row][col] = 255; # set to white
             moved = 0
             row += 1
             print "moving down, row: " + str(row)
         elif array[row][col] < np.mean(polePoints): # we should be darker...
+            array[row][col] = 255; # set to white
             moved = 0
             print "new distribution at point: [" + str(row) + "," + str(col)+"] "+ str(array[row][col])
             row += 1
         else:
             print "v unexpected event... at: [" + str(row) + "," + str(col)+"] " + str(array[row][col])
             # don't know why this would be... hope everything is fine!
+            array[row][col] = 255; # set to white
             row += 1 
             col += 1
             moved += 1
             if moved > 3:
                 print "moved 3 times: at point: "+ str(row) + "," + str(col)+"]"
                 break
+        
     return row, col
 
 def climbLeg(array, row, centerCol, width, waterPoints, polePoints, delta=10):
@@ -152,6 +157,7 @@ def climbLeg(array, row, centerCol, width, waterPoints, polePoints, delta=10):
             #update poleMean
             poleMean = np.mean(polePoints)
             # decrement row
+            array[row][col] = 255; # set to white
             
         elif abs(array[row][col] - waterMean) < delta:
             #means we have water
@@ -166,6 +172,7 @@ def climbLeg(array, row, centerCol, width, waterPoints, polePoints, delta=10):
                 print "WE'RE DROWNING OVER HERE"
                 print "Check if we are at black?"
             else:
+                array[row][col] = 255; # set to white
                 col = new_col
                         
         elif array[row][col] < poleMean:
@@ -176,6 +183,7 @@ def climbLeg(array, row, centerCol, width, waterPoints, polePoints, delta=10):
                 # exit case
                 break
             else:
+                array[row][col] = 255; # set to white
                 col = new_col
 
         row -= 1
